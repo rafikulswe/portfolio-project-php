@@ -1,11 +1,12 @@
 <?php
     require 'dbConfig.php';
     // THIS FOR CREATE
-    if (isset($_POST['saveBanner'])) {
+    if (isset($_POST['saveProject'])) {
 
         $upload_status = false;
-        if (isset($_FILES['image'])) {
-            $imgArray = $_FILES['image'];
+        if (isset($_FILES['project_thumb'])) {
+            $imgArray = $_FILES['project_thumb'];
+
             $file_name = $imgArray['name'];
             $tmp_file_name = $imgArray['tmp_name'];
 
@@ -16,7 +17,7 @@
             $random_file_name = time().'.'.$file_extension;
 
             if (in_array($file_extension, $valid_extensions)) {
-                move_uploaded_file($tmp_file_name, '../uploads/bannerImage/'.$random_file_name);
+                move_uploaded_file($tmp_file_name, '../uploads/projectThumb/'.$random_file_name);
                 $upload_status = true;
             } else {
                 $message = $file_extension." is not Supported";
@@ -25,29 +26,29 @@
             $message = "File Not Found";
         }
         
-        $title     = $_POST['title'];
-        $sub_title = $_POST['sub_title'];
-        $details   = $_POST['details'];
+        $category_id   = $_POST['category_id'];
+        $project_name  = $_POST['project_name'];
+        $project_link  = $_POST['project_link'];
 
-        if (empty($title) || empty($sub_title) || empty($details) || $upload_status == false) {
+        if (empty($category_id) || empty($project_name) || empty($project_link) || $upload_status == false) {
             $message = "All fields are required";
         } else {
-            $insertQry = "INSERT INTO banners (title, sub_title, details, image) VALUES ('{$title}', '{$sub_title}', '{$details}', '{$random_file_name}')";
+            $insertQry = "INSERT INTO our_projects (category_id, project_name, project_link, project_thumb) VALUES ('{$category_id}', '{$project_name}', '{$project_link}', '{$random_file_name}')";
             $isSubmit = mysqli_query($dbCon, $insertQry);
 
             if ($isSubmit == true) {
-                $message = "Banner Insert Succesfull";
+                $message = "Project Insert Succesfull";
             } else {
                 $message = "Insert Failed";
             }
         }
 
-        header("Location: ../banner/bannerCreate.php?msg={$message}");
+        header("Location: ../ourProject/projectCreate.php?msg={$message}");
         
     }
 
     // THIS FOR UPDATE
-    if (isset($_POST['updateBanner'])) {
+    if (isset($_POST['updateProject'])) {
 
         $banner_id = $_POST['banner_id'];
         $title     = $_POST['title'];
@@ -62,7 +63,7 @@
             $isSubmit = mysqli_query($dbCon, $updateQry);
 
             if ($isSubmit == true) {
-                $message = "Banner Update Succesfull";
+                $message = "Project Update Succesfull";
             } else {
                 $message = "Update Failed";
             }

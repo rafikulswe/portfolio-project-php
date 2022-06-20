@@ -7,9 +7,9 @@
             <?php $manuName = basename(__DIR__); ?>
             <li class=<?php echo $manuName == 'admin' ? "active" : ''; ?> ><a href="#"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
             <li class=<?php echo $manuName == 'banner' ? "active" : ''; ?> ><a href="<?php echo $isInternal == true ? '': 'banner/';?>bannerList.php"><i class="icon-image-compare"></i> <span>Banners</span></a></li>
-            <li><a href="#"><i class="icon-home4"></i> <span>Services</span></a></li>
+            <li><a href="<?php echo $isInternal == true ? '' : 'ourProject/'?>projectList.php"><i class="icon-home4"></i> <span>Our Projects</span></a></li>
             <li><a href="#"><i class="icon-home4"></i> <span>Sections</span></a></li>
-            <li><a href="#"><i class="icon-home4"></i> <span>Our Projects</span></a></li>
+            <li><a href="#"><i class="icon-home4"></i> <span>Services</span></a></li>
             <li><a href="#"><i class="icon-home4"></i> <span>Our Staff</span></a></li>
             <li><a href="#"><i class="icon-home4"></i> <span>Our Clients</span></a></li>
             <li><a href="#"><i class="icon-home4"></i> <span>Contact Messagea</span></a></li>

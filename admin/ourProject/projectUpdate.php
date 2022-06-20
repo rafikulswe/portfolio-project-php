@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-	
 <?php
-
-	// die($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
 	if (basename(__DIR__) != 'admin') {
 		$baseUrl = '../';
 		$isInternal = true;
@@ -12,8 +9,6 @@
 		$isInternal = false;
 	}
  	include '../includes/head.php'; 
- 	require '../controller/dbConfig.php'; 
-	
 ?>
 <body>
 
@@ -68,7 +63,7 @@
 					<div class="breadcrumb-line">
 						<ul class="breadcrumb">
 							<li><a href="#"><i class="icon-image-compare position-left"></i> Banner</a></li>
-							<li class="active">List</li>
+							<li class="active">Update</li>
 						</ul>
 					</div>
 				</div>
@@ -81,10 +76,9 @@
 					<!-- Basic datatable -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-							<h5 class="panel-title">Banner List</h5>
+							<h5 class="panel-title">Banner Update</h5>
 							<div class="heading-elements">
 								<ul class="icons-list">
-									<li><a href="bannerCreate.php" class="btn btn-primary add-new">Add New</a></li>
 			                		<!-- <li><a data-action="collapse"></a></li>
 			                		<li><a data-action="reload"></a></li>
 			                		<li><a data-action="close"></a></li> -->
@@ -93,50 +87,65 @@
 						</div>
 
 						<div class="panel-body">
-							<?php
-								if (isset($_GET['msg'])) {
+							<?php 
+								require '../controller/dbConfig.php';
+								$banner_id = $_GET['banner_id'];
+								$getSingleDataQry = "SELECT * FROM banners WHERE id={$banner_id}";
+								$getResult = mysqli_query($dbCon, $getSingleDataQry);
 							?>
-								<div class="alert alert-success no-border">
-									<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
-									<span class="text-semibold">Success</span> <?php echo $_GET['msg']; ?>
+							<form class="form-horizontal" action="../controller/BannerController.php" method="post">
+								<fieldset class="content-group mt-10">
+
+									<?php
+										if (isset($_GET['msg'])) {
+									?>
+										<div class="alert alert-success no-border">
+											<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+											<span class="text-semibold">Success</span> <?php echo $_GET['msg']; ?>
+										</div>
+									<?php } ?>
+
+
+									<?php
+										foreach ($getResult as $key => $banner) {
+									?>
+										<input type="hidden" class="form-control" name="banner_id" value="<?php echo $banner['id']; ?>">
+
+										<div class="form-group">
+											<label class="control-label col-lg-2" for="title">Title</label>
+											<div class="col-lg-10">
+												<input type="text" class="form-control" id="title" name="title" required value="<?php echo $banner['title']; ?>">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-lg-2" for="sub_title">Sub Title</label>
+											<div class="col-lg-10">
+												<input type="text" class="form-control" id="sub_title" name="sub_title" required value="<?php echo $banner['sub_title']; ?>">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-lg-2" for="details">Details</label>
+											<div class="col-lg-10">
+												<textarea rows="5" cols="5" class="form-control" placeholder="Default textarea" id="details" name="details" required><?php echo $banner['details']; ?></textarea>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-lg-2" for="image">Image</label>
+											<div class="col-lg-10">
+												<input type="file" class="form-control" id="image" name="image">
+											</div>
+										</div>
+									<?php } ?>
+								</fieldset>
+
+								<div class="text-right">
+									<button type="submit" class="btn btn-primary" name="updateBanner">Submit</button>
+									<a href="bannerList.php" class="btn btn-default">Back To List </a>
 								</div>
-							<?php } ?>
-
-							<table class="table table-bordered datatable-basic">
-								<thead>
-									<tr>
-										<th width="5%">SL.</th>
-										<th width="20%">Title</th>
-										<th width="20%">Sub Title</th>
-										<th width="25%">Details</th>
-										<th width="20%">Image</th>
-										<th width="10%" class="text-center">Actions</th>
-									</tr>
-								</thead>
-								<tbody>
-
-								<?php 
-									$selectQry = "SELECT * FROM banners WHERE active_status=1";
-									$bannerList = mysqli_query($dbCon, $selectQry);
-									
-									foreach ($bannerList as $key => $banner) {
-								?>
-									<tr>
-										<td><?php echo ++$key; ?></td>
-										<td><?php echo $banner['title']; ?></td>
-										<td><?php echo $banner['sub_title']; ?></td>
-										<td><?php echo $banner['details']; ?></td>
-										<td>
-											<img class="img-responsive" width="80" height="80" src="<?php echo '../uploads/bannerImage/'.$banner['image']; ?>" />
-										</td>
-										<td class="text-center">
-											<a href="bannerUpdate.php?banner_id=<?php echo $banner['id']; ?>"><i class="icon-pencil7"></i></a>
-											<a href="bannerDelete.php?banner_id=<?php echo $banner['id']; ?>"><i class="icon-trash"></i></a>
-										</td>
-									</tr>
-								<?php } ?>
-								</tbody>
-							</table>
+							</form>
 						</div>
 
 						

@@ -67,7 +67,7 @@
 				<div class="page-header">
 					<div class="breadcrumb-line">
 						<ul class="breadcrumb">
-							<li><a href="#"><i class="icon-image-compare position-left"></i> Banner</a></li>
+							<li><a href="#"><i class="icon-image-compare position-left"></i> Project</a></li>
 							<li class="active">List</li>
 						</ul>
 					</div>
@@ -81,10 +81,10 @@
 					<!-- Basic datatable -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-							<h5 class="panel-title">Banner List</h5>
+							<h5 class="panel-title">Project List</h5>
 							<div class="heading-elements">
 								<ul class="icons-list">
-									<li><a href="bannerCreate.php" class="btn btn-primary add-new">Add New</a></li>
+									<li><a href="projectCreate.php" class="btn btn-primary add-new">Add New</a></li>
 			                		<!-- <li><a data-action="collapse"></a></li>
 			                		<li><a data-action="reload"></a></li>
 			                		<li><a data-action="close"></a></li> -->
@@ -106,35 +106,39 @@
 								<thead>
 									<tr>
 										<th width="5%">SL.</th>
-										<th width="20%">Title</th>
-										<th width="20%">Sub Title</th>
-										<th width="25%">Details</th>
-										<th width="20%">Image</th>
+										<th width="15%">Category Name</th>
+										<th width="20%">Project Name</th>
+										<th width="25%">Project Link</th>
+										<th width="25%">Project Thumb</th>
 										<th width="10%" class="text-center">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
 
 								<?php 
-									$selectQry = "SELECT * FROM banners WHERE active_status=1";
-									$bannerList = mysqli_query($dbCon, $selectQry);
+									$selectQry = "SELECT our_projects.*, categories.category_name FROM `our_projects` 
+									INNER JOIN categories ON our_projects.category_id = categories.id
+									WHERE our_projects.active_status = 1";
+
+									$projectList = mysqli_query($dbCon, $selectQry);
 									
-									foreach ($bannerList as $key => $banner) {
+									if (!empty($projectList)) {
+									foreach ($projectList as $key => $project) {
 								?>
 									<tr>
 										<td><?php echo ++$key; ?></td>
-										<td><?php echo $banner['title']; ?></td>
-										<td><?php echo $banner['sub_title']; ?></td>
-										<td><?php echo $banner['details']; ?></td>
+										<td><?php echo $project['category_name']; ?></td>
+										<td><?php echo $project['project_name']; ?></td>
+										<td><?php echo $project['project_link']; ?></td>
 										<td>
-											<img class="img-responsive" width="80" height="80" src="<?php echo '../uploads/bannerImage/'.$banner['image']; ?>" />
+											<img class="img-responsive" width="80" height="80" src="<?php echo '../uploads/projectThumb/'.$project['project_thumb']; ?>" />
 										</td>
 										<td class="text-center">
-											<a href="bannerUpdate.php?banner_id=<?php echo $banner['id']; ?>"><i class="icon-pencil7"></i></a>
-											<a href="bannerDelete.php?banner_id=<?php echo $banner['id']; ?>"><i class="icon-trash"></i></a>
+											<a href="projectUpdate.php?project_id=<?php echo $project['id']; ?>"><i class="icon-pencil7"></i></a>
+											<a href="projectDelete.php?project_id=<?php echo $project['id']; ?>"><i class="icon-trash"></i></a>
 										</td>
 									</tr>
-								<?php } ?>
+								<?php }} ?>
 								</tbody>
 							</table>
 						</div>
